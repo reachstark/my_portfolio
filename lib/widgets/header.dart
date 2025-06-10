@@ -1,62 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_portfolio/images.dart';
+import 'package:my_portfolio/main.dart';
+import 'package:my_portfolio/router/router.dart';
 import 'package:my_portfolio/widgets/scale_button.dart';
 
 class Header extends StatelessWidget {
-  const Header({super.key});
+  final bool isCustom;
+  final Widget? customWidget;
+  final bool hasBackButton;
+
+  const Header({
+    super.key,
+    this.isCustom = false,
+    this.customWidget,
+    this.hasBackButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final bool isMobile = MediaQuery.of(context).size.width < 600;
+
+    Widget navLink(IconData icon, String title, VoidCallback? onTap) {
+      if (isMobile) {
+        return ScaleButton(
+          onTap: onTap,
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(color: Colors.white, fontSize: 14),
+              ),
+            ],
+          ),
+        );
+      } else {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: TextButton(
+            onPressed: onTap,
+            child: Row(
+              children: [
+                Icon(icon, color: Colors.white, size: 20),
+                const SizedBox(width: 6),
+                Text(
+                  title,
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: Color(0xFF223649))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: const [
-              Icon(Icons.change_history, color: Colors.white, size: 20),
-              SizedBox(width: 8),
-              Text(
-                "Boritheareach's Portfolio",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
+          if (hasBackButton) ...[
+            ScaleButton(
+              onLongPress: () {
+                Get.offAndToNamed(AppRouter.initialRoute);
+              },
+              child: ElevatedButton(
+                onPressed: () => Get.back(),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Icon(Icons.arrow_back),
+              ),
+            ),
+          ],
+          // Logo
+          Visibility(
+            visible: !hasBackButton,
+            child: ScaleButton(
+              onTap: () => Get.toNamed(AppRouter.initialRoute),
+              child: Row(
+                children: const [
+                  Icon(Icons.change_history, color: Colors.white, size: 20),
+                  SizedBox(width: 8),
+                  Text(
+                    "Boritheareach's Portfolio",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // Right side logic
+          if (isCustom && customWidget != null)
+            customWidget!
+          else if (isMobile)
+            MenuAnchor(
+              style: MenuStyle(
+                backgroundColor: WidgetStateProperty.all(
+                  const Color(0xFF182634),
                 ),
               ),
-            ],
-          ),
-          Row(
-            children: [
-              _navLink('About'),
-              _navLink('Projects'),
-              _navLink('Contact'),
-              const SizedBox(width: 16),
-              ScaleButton(
-                child: const CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(
-                    'https://lh3.googleusercontent.com/aida-public/AB6AXuDX2XMukr6N6SSINu7J1fDr5W8GZAzOJmQ508mrSv4rIma9VlRAs_AqITYnPDtq3MTjdPEg9P2LsVNV09RDCad87xxwZEdJjXkYW3pdTYQG9Pxs28MfI-m9m6tFVmYBDG3V72iPQdWunj6EW81q8UQ4uc-WB2G6hJZRZn6rQiRw3E7EmUkC0zwzgATuvQWajNsi56Ne3qk24xPTmVyUe9q5QC5zoQj5xbsLyqdZEWeHkBga8y5KHwWDbPWkepTzLdIK8luef_96tM9W',
+              builder: (context, controller, child) => IconButton(
+                icon: const Icon(Icons.menu, color: Colors.white),
+                onPressed: () => controller.open(),
+              ),
+              menuChildren: [
+                MenuItemButton(
+                  child: navLink(Icons.person, 'About', () {
+                    Get.toNamed(AppRouter.aboutRoute);
+                  }),
+                ),
+                MenuItemButton(
+                  child: navLink(Icons.work, 'Projects', () {
+                    Get.toNamed(AppRouter.projectsRoute);
+                  }),
+                ),
+              ],
+            )
+          else
+            Row(
+              children: [
+                navLink(Icons.person, 'About', () {
+                  Get.toNamed(AppRouter.aboutRoute);
+                }),
+                navLink(Icons.work, 'Projects', () {
+                  Get.toNamed(AppRouter.projectsRoute);
+                }),
+                const SizedBox(width: 16),
+                ScaleButton(
+                  onTap: () {},
+                  child: const CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage(AppImages.myProfile),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );
   }
-
-  Widget _navLink(String title) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    child: TextButton(
-      onPressed: () {},
-      child: Text(
-        title,
-        style: const TextStyle(color: Colors.white, fontSize: 14),
-      ),
-    ),
-  );
 }

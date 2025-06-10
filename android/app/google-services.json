@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "339464481865",
+    "project_id": "my-portfolio-280a8",
+    "storage_bucket": "my-portfolio-280a8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339464481865:android:f71cebe99dd6aa2e53e398",
+        "android_client_info": {
+          "package_name": "com.boritheareach.portfolio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqfk__gymF6DV77IXIE47LsyO7DaVvfB4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

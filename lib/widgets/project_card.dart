@@ -1,19 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:my_portfolio/model/project_model.dart';
+import 'package:my_portfolio/pages/view_project.dart';
 
 class ProjectCard extends StatelessWidget {
-  final String title;
-  final String description;
-  final String imageUrl;
-  const ProjectCard({
-    super.key,
-    required this.title,
-    required this.description,
-    required this.imageUrl,
-  });
+  final ProjectModel project;
+
+  const ProjectCard({super.key, required this.project});
 
   @override
   Widget build(BuildContext context) {
+    bool isMobile = MediaQuery.of(context).size.width < 600;
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: const Color(0xFF182634),
         borderRadius: BorderRadius.circular(12),
@@ -28,7 +28,7 @@ class ProjectCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  project.title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -37,7 +37,9 @@ class ProjectCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  description,
+                  project.description,
+                  maxLines: 4,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Color(0xFF90ADCB),
                     fontSize: 14,
@@ -52,7 +54,7 @@ class ProjectCard extends StatelessWidget {
                       vertical: 8,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () => viewProjectDetails(project),
                   child: const Text(
                     'View Project',
                     style: TextStyle(color: Colors.white, fontSize: 14),
@@ -61,16 +63,48 @@ class ProjectCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(imageUrl, fit: BoxFit.cover),
+          if (!isMobile) ...[
+            const SizedBox(width: 16),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: 16 / 9,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: CachedNetworkImage(
+                    imageUrl: project.thumbnail!,
+                    errorWidget: (context, url, error) => Container(
+                      decoration: const BoxDecoration(
+                        color: Color.fromARGB(255, 27, 48, 69),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error, color: Colors.red),
+                          const SizedBox(height: 8),
+                          Text(
+                            error.toString(),
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) =>
+                            LinearProgressIndicator(
+                              value: downloadProgress.progress,
+                              year2023: false,
+                            ),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ],
       ),
     );
