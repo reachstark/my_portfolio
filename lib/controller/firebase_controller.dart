@@ -27,29 +27,37 @@ class FirebaseController extends GetxController {
 
   void createNewProject() async {
     final project = ProjectModel(
-      title: 'BMI Calculator',
+      title: 'Simple QR Code Generator',
       description:
-          'Track your health effortlessly with our beautifully designed BMI Calculator app. Featuring an intuitive and responsive UI, it automatically calculates your Body Mass Index (BMI) as you input your height and weight—no extra taps needed. Stay consistent with your fitness goals by logging your BMI daily and monitoring trends over time through a clean and user-friendly dashboard. Whether you\'re maintaining, gaining, or losing weight, this app makes health tracking simple, accurate, and visually engaging.',
+          'A simple QR code generator app that can generate QR codes for any text with customization options, including color, embedded logo, and more. With responsive design built in, the app is perfect for both mobile and desktop users. The app is open-source and free to use.',
       isFeatured: true,
-      isDownloadable: false,
-      githubLink: '',
-      downloadUrl: '',
-      images: [],
-      isOpenSource: false,
-      thumbnail: '',
+      isDownloadable: true,
+      githubLink: 'https://github.com/reachstark/simple_qr_code_generator',
+      downloadUrl: 'https://mega.nz/folder/skE3BIAB#5IFIvVhk1FBy6OEMlkSSmQ',
+      images: [
+        'https://i.postimg.cc/rFtsCHFj/Android-QR.png',
+        'https://i.postimg.cc/BbR6fTN2/Android-QR-logo.png',
+        'https://i.postimg.cc/52d0PmXV/Android-QR-share.png',
+        'https://i.postimg.cc/FF61Svm1/Windows-QR.png',
+      ],
+      isOpenSource: true,
+      thumbnail: 'https://i.postimg.cc/VLt8Gr0Q/QR-Thumbnail.png',
       tags: [
         'Flutter',
         'Dart',
-        'Firebase',
-        'Cloud Firestore',
+        'Free',
+        'Ad-free',
         'Beautiful UI',
-        'Health',
+        'Open-source',
+        'Responsive',
+        'Android',
+        'Windows',
       ],
     );
 
     await FirebaseFirestore.instance
         .collection('projects')
-        .doc('BMI Calculator') // <-- Your custom document ID
+        .doc(project.title)
         .set(project.toJson());
   }
 }
