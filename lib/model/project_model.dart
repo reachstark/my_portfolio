@@ -9,6 +9,7 @@ class ProjectModel {
   final bool isDownloadable;
   final List<String> tags;
   final bool? isOpenSource;
+  final String? websiteLink;
 
   const ProjectModel({
     required this.title,
@@ -21,6 +22,7 @@ class ProjectModel {
     required this.isDownloadable,
     this.tags = const [],
     this.isOpenSource,
+    this.websiteLink,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -35,6 +37,7 @@ class ProjectModel {
       isDownloadable: json['isDownloadable'],
       tags: List<String>.from(json['tags'] ?? []),
       isOpenSource: json['isOpenSource'],
+      websiteLink: json['websiteLink'],
     );
   }
 
@@ -50,6 +53,7 @@ class ProjectModel {
       'isDownloadable': isDownloadable,
       'tags': tags,
       'isOpenSource': isOpenSource,
+      'websiteLink': websiteLink,
     };
   }
 }

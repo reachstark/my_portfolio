@@ -167,6 +167,15 @@ class ViewProject extends StatelessWidget {
                               icon: const Icon(Icons.download),
                               label: const Text("Download"),
                             ),
+                          if ((project.websiteLink?.isNotEmpty ?? false))
+                            OutlinedButton.icon(
+                              onPressed: () => _launchUrl(project.websiteLink!),
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: primaryColor,
+                              ),
+                              icon: const Icon(Icons.web),
+                              label: const Text("Website"),
+                            ),
                         ],
                       ),
                       const SizedBox(height: 32),
